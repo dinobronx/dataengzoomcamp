@@ -5,7 +5,7 @@ import os
 import argparse
 import pandas as pd
 from sqlalchemy import create_engine
-
+from time import time
 
 
 def main(params):
@@ -27,36 +27,36 @@ def main(params):
        os.system(f"wget {url} -O {csv_name}")
        
        engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
-       engine.connect()
-
 
        df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
-
        df = next(df_iter)
 
-       df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
-       df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+       # green taxi = lpep, yellow taxi = tpep
+       df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+       df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
 
        df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
 
        df.to_sql(name=table_name, con=engine, if_exists='append')
 
-
-       from time import time
-
        while True:
-              t_start = time()
-              df = next(df_iter)
-              df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
-              df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
+              try:
+
+                     t_start = time()
+                     df = next(df_iter)
+                     df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+                     df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+                     
+                     df.to_sql(name=table_name, con=engine, if_exists='append')
+                     
+                     t_end = time()
+                     total = t_end - t_start
+                     
+                     print(f'inserted another chunk ..., took {total}')
               
-              df.to_sql(name=table_name, con=engine, if_exists='append')
-              
-              print('inserted another chunk ...')
-              t_end = time()
-              total = t_end - t_start
-              
-              print(f'inserted another chunk ..., took {total}')
+              except StopIteration:
+                     print('Finished ingesting data into the postgres database')
+                     break
 
 if __name__ == '__main__':
        parser = argparse.ArgumentParser(description='Ingest CSV data to Postgres')
