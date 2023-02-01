@@ -4,6 +4,14 @@ SELECT
 FROM green_taxi_trips
 WHERE to_char(lpep_pickup_datetime, 'YYYY-MM-DD') = '2019-01-15'AND 
 	to_char(lpep_dropoff_datetime, 'YYYY-MM-DD') = '2019-01-15'
+
+-- another way to check for dates
+SELECT
+	COUNT(1)
+FROM green_taxi_trips
+WHERE date(lpep_pickup_datetime) = '2019-01-15'AND 
+	date(lpep_dropoff_datetime) = '2019-01-15'
+
 -- ans: 20530
 
 
@@ -21,7 +29,7 @@ ORDER BY dist DESC
 SELECT 
 	COUNT(1) as two
 FROM green_taxi_trips
-WHERE Passenger_count = 3 AND to_char(lpep_pickup_datetime, 'YYYY-MM-DD') = '2019-01-01'
+WHERE Passenger_count = 2 AND to_char(lpep_pickup_datetime, 'YYYY-MM-DD') = '2019-01-01'
 -- 2 - 1282 3 - 254
 
 
