@@ -1,0 +1,5 @@
+*.DS_Store
+*.ipynb
+**/ny_taxi_postgres_data/*
+*.csv.gz
+*.csv
