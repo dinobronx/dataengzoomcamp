@@ -51,6 +51,9 @@ docker run -it \
 # ingest
 URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
 
+# homework
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_2019-01.csv.gz"
+
 python ingest_data.py \
     --user=root \
     --password=root \
@@ -80,3 +83,16 @@ docker run -it \
 
 # if all of this is in dockercompose we don't have to specify the network because containers
 # run in the same network
+
+# network in docker compose 2_docker_sql_default
+
+docker run -it \
+  --network=2_docker_sql_default \
+  taxi_ingest:v001 \
+    --user=root \
+    --password=root \
+    --host=pgdatabase \
+    --port=5432 \
+    --db=ny_taxi \
+    --table-name=green_taxi_trips \
+    --url=${URL}
