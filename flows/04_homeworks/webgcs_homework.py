@@ -50,7 +50,7 @@ def etl_web_to_gcs(color: str, year: int, month: int) -> None:
     write_gcs(path_df)
 
 if __name__ == '__main__':
-    color = "yellow"
-    year = 2019
-    month = 3
+    color = "green"
+    year = 2020
+    month = 11
     etl_web_to_gcs(color, year, month)
