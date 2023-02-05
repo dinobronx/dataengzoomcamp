@@ -36,7 +36,7 @@ storage:
   block_type_slug: github
   _block_type_slug: github
 path: ''
-entrypoint: webgcs_homework.py:etl_web_to_gcs_hw
+entrypoint: ./flows/04_homeworks/webgcs_homework.py:etl_web_to_gcs_hw
 parameter_openapi_schema:
   title: Parameters
   type: object
