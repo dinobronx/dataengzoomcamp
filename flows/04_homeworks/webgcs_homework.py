@@ -7,19 +7,14 @@ from prefect_gcp.cloud_storage import GcsBucket
 def fetch(dataset_url: str) -> pd.DataFrame:
     """Read taxi data from web into pandas DataFrame"""
     
-    # simulating a failure
-    # if randint(0, 1) > 0:
-    #     print('**** EXCEPTION COMING****')
-    #     raise Exception
-
     df = pd.read_csv(dataset_url)
     return df
 
 @task(log_prints=True)
 def clean(df = pd.DataFrame) -> pd.DataFrame:
     """Fix dtype issues"""
-    df['tpep_pickup_datetime'] = pd.to_datetime(df['tpep_pickup_datetime'])
-    df['tpep_dropoff_datetime'] = pd.to_datetime(df['tpep_dropoff_datetime'])
+    df['lpep_pickup_datetime'] = pd.to_datetime(df['lpep_pickup_datetime'])
+    df['lpep_dropoff_datetime'] = pd.to_datetime(df['lpep_dropoff_datetime'])
     print(df.head(2))
     print(f"columns: {df.dtypes}")
     print(f"rows: {len(df)}")
@@ -44,11 +39,8 @@ def write_gcs(pathdf: Path) -> None:
     return
 
 @flow()
-def etl_web_to_gcs() -> None:
+def etl_web_to_gcs(color: str, year: int, month: int) -> None:
     """The main ETL function"""
-    color = "yellow"
-    year = 2019
-    month = 3
     dataset_file = f"{color}_tripdata_{year}-{month:02}"
     dataset_url =  f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{dataset_file}.csv.gz"
 
@@ -58,4 +50,7 @@ def etl_web_to_gcs() -> None:
     write_gcs(path_df)
 
 if __name__ == '__main__':
-    etl_web_to_gcs()
+    color = "yellow"
+    year = 2019
+    month = 3
+    etl_web_to_gcs(color, year, month)
