@@ -12,11 +12,6 @@ creating deployment thru command line
 this will create a yaml file
 `prefect deployment build ./parameterized_flow.py:etl_parent_flow -n etl2 --cron "0 0 * * *" -a`
 
-REMINDER: When creating deployment thru code, the path seems to be inferred
-ex. My current dir is flows/03_deployments/docker_deploy.py, when I run python docker_deploy.py under this dir
-it's gonna try to find the script on the root of docker
-But if my current dir is above flows and I run python flows/03_deployments/docker_deploy.py 
-the flow run is gonna try to find the script in flows/03_deployments/docker_deploy.py path of docker
 
 running prefect deployment:
 `prefect deployment run etl-parent-flow/docker-flow -p "months=[4, 5]"`

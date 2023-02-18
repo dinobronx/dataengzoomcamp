@@ -12,7 +12,7 @@ def fetch(dataset_url: str, filename):
 @task()
 def write_gcs(pathdf: Path) -> None:
     """Uploading local parquet file to gcs"""
-    gcs_block = GcsBucket.load("homework-wk3")
+    gcs_block = GcsBucket.load("homework-wk4")
     gcs_block.upload_from_path(
         from_path=pathdf,
         to_path=pathdf
@@ -22,10 +22,16 @@ def write_gcs(pathdf: Path) -> None:
 @flow()
 def etl_web_to_gcs_hw(year: int, month: int) -> None:
     """The main ETL function"""
-    dataset_file = f"fhv_tripdata_{year}-{month:02}.csv.gz"
-    dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_{year}-{month:02}.csv.gz"
-    fetch(dataset_url, dataset_file)
-    filename = Path(dataset_file)
+    fhv_file = f"fhv_tripdata_{year}-{month:02}.csv.gz"
+    fhv_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_{year}-{month:02}.csv.gz"
+    
+    yellow_file = f"yellow_tripdata_{year}-{month:02}.csv.gz"
+    yellow_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_{year}-{month:02}.csv.gz"
+    
+    green_file = f"green_tripdata_{year}-{month:02}.csv.gz"
+    green_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/green/green_tripdata_{year}-{month:02}.csv.gz"
+    fetch(green_url, green_file)
+    filename = Path(green_file)
     write_gcs(filename)
 
     
@@ -39,4 +45,5 @@ def etl_gcs_to_eq(months: list[int], year: int):
         
 
 if __name__=='__main__':
-    etl_gcs_to_eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2019)
+    
+    etl_gcs_to_eq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2020)
