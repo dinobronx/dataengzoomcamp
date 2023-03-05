@@ -8,7 +8,7 @@ week5/fhv/
 week5/data
 week5/tmp
 week5/zones
-
+week5/lib
 # Default .gitignore content added by dbt Cloud
 target/
 dbt_packages/
