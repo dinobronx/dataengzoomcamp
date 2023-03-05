@@ -6,6 +6,8 @@
 *__pycache__
 week5/fhv/
 week5/data
+week5/tmp
+week5/zones
 
 # Default .gitignore content added by dbt Cloud
 target/
